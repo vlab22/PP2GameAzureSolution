@@ -1,0 +1,57 @@
+{
+    "accountEnabled": "True",
+    "addIns": [],
+    "alternativeNames": [],
+    "appDisplayName": "azure-cli-2022-01-26-20-21-29",
+    "appId": "ba08aea9-6554-409b-8179-0a59f6826b83",
+    "appOwnerTenantId": "4c7186cb-b33d-457c-8af8-2666547ae506",
+    "appRoleAssignmentRequired": false,
+    "appRoles": [],
+    "applicationTemplateId": null,
+    "deletionTimestamp": null,
+    "displayName": "azure-cli-2022-01-26-20-21-29",
+    "errorUrl": null,
+    "homepage": null,
+    "informationalUrls": {
+      "marketing": null,
+      "privacy": null,
+      "support": null,
+      "termsOfService": null
+    },
+    "keyCredentials": [],
+    "logoutUrl": null,
+    "notificationEmailAddresses": [],
+    "oauth2Permissions": [
+      {
+        "adminConsentDescription": "Allow the application to access azure-cli-2022-01-26-20-21-29 on behalf of the signed-in user.",
+        "adminConsentDisplayName": "Access azure-cli-2022-01-26-20-21-29",
+        "id": "81213116-3cd7-4744-97e3-d148da8f4404",
+        "isEnabled": true,
+        "type": "User",
+        "userConsentDescription": "Allow the application to access azure-cli-2022-01-26-20-21-29 on your behalf.",
+        "userConsentDisplayName": "Access azure-cli-2022-01-26-20-21-29",
+        "value": "user_impersonation"
+      }
+    ],
+    "objectId": "b93cb4ae-be3d-4432-857c-f506ff4b3f62",
+    "objectType": "ServicePrincipal",
+    "odata.type": "Microsoft.DirectoryServices.ServicePrincipal",
+    "passwordCredentials": [],
+    "preferredSingleSignOnMode": null,
+    "preferredTokenSigningKeyEndDateTime": null,
+    "preferredTokenSigningKeyThumbprint": null,
+    "publisherName": "Diretório Padrão",
+    "replyUrls": [],
+    "samlMetadataUrl": null,
+    "samlSingleSignOnSettings": null,
+    "servicePrincipalNames": [
+      "ba08aea9-6554-409b-8179-0a59f6826b83"
+    ],
+    "servicePrincipalType": "Application",
+    "signInAudience": "AzureADMyOrg",
+    "tags": [
+      "apiConsumer",
+      "desktopApp"
+    ],
+    "tokenEncryptionKeyId": null
+  },

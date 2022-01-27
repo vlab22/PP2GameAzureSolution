@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerName": {
+            "value": "pp2game3"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "imageType": {
+            "value": "Private"
+        },
+        "imageName": {
+            "value": "pp2game.azurecr.io/ubuntu-unity-game-server:latest"
+        },
+        "osType": {
+            "value": "Linux"
+        },
+        "numberCpuCores": {
+            "value": "1"
+        },
+        "memory": {
+            "value": "1.5"
+        },
+        "restartPolicy": {
+            "value": "OnFailure"
+        },
+        "imageRegistryLoginServer": {
+            "value": "pp2game.azurecr.io"
+        },
+        "imageUsername": {
+            "value": "pp2game"
+        },
+        "imagePassword": {
+            "value": null
+        },
+        "ipAddressType": {
+            "value": "Public"
+        },
+        "ports": {
+            "value": [
+                {
+                    "port": "55551",
+                    "protocol": "TCP"
+                }
+            ]
+        },
+        "dnsNameLabel": {
+            "value": "pp2game3"
+        }
+    }
+}

@@ -14,27 +14,33 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using System.Collections.Generic;
 using Container_Library_Helper;
+using Microsoft.AspNetCore.Authentication;
+using System.Net;
 
 namespace PP2GameAzureFcs
 {
-    public static class FcGetContainers
+    public static class GetContainersAzFc
     {
 
-        [FunctionName("FcGetContainers")]
+        [FunctionName("GetContainersAzFc")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            //log.LogInformation("C# HTTP trigger function processed a request.");
 
-
-            bool auth = await AuthorizationHelper.CheckRequestBodyUserAndPass(req);
+            bool auth = await AuthorizationHelper.CheckUserPassAsync(req);
 
             if (!auth)
             {
-                return new ForbidResult();
+                return AuthorizationHelper.ForbidIncorrectPostPassword();
             }
 
+            JsonResult result = GetContainersListJson();
+            return result;
+        }
+
+        private static JsonResult GetContainersListJson()
+        {
             var azure = AzureFactory.AzureCreator.GetAzureContext();
 
             var cnts = azure.ContainerGroups.List();
@@ -47,11 +53,9 @@ namespace PP2GameAzureFcs
             }
 
             var result = new JsonResult(containerGroupsDetails);
-
             return result;
         }
 
 
-        
     }
 }

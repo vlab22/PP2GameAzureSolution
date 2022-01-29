@@ -17,9 +17,9 @@ using PP2AzureConfig;
 
 namespace PP2GameAzureFcs
 {
-    public static class DestroyContainer
+    public static class DestroyContainerAzFc
     {
-        [FunctionName("DestroyContainer")]
+        [FunctionName("DestroyContainerAzFc")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -29,12 +29,12 @@ namespace PP2GameAzureFcs
 
             bool auth = AuthorizationHelper.CheckUserAndPass((string)(data?.user), (string)(data?.pass));
 
-            if (!auth || data?.name == null)
+            if (!auth)
             {
-                return new ForbidResult();
+                return AuthorizationHelper.ForbidIncorrectPostPassword();
             }
 
-           string result = await DestroyContainerGroupByNameAsync((string)(data?.name), log);
+            string result = await DestroyContainerGroupByNameAsync((string)(data?.name), log);
 
             return new JsonResult(result == "" ? new OkObjectResult($"ContainerGroup {data?.name} destroyed") : new NotFoundObjectResult(result));
         }

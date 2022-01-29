@@ -20,6 +20,7 @@ namespace ContainerFactory
                     .WithExternalTcpPort(port)
                     .WithMemorySizeInGB(1.5)
                     .WithCpuCoreCount(1)
+                    .WithEnvironmentVariable("PLAYERS_COUNT", "0")
                     .Attach()
                 .WithRestartPolicy(Microsoft.Azure.Management.ContainerInstance.Fluent.Models.ContainerGroupRestartPolicy.OnFailure)
                 .WithDnsPrefix(dns);

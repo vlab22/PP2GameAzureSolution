@@ -12,11 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Container Library Helper", "Container Library Helper\Container Library Helper.csproj", "{B315E84C-2304-454F-A331-D79A40915039}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainerFactory", "ContainerFactory\ContainerFactory.csproj", "{44EE5F40-BC1C-4D23-9A9C-053288BF6760}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContainerFactory", "ContainerFactory\ContainerFactory.csproj", "{44EE5F40-BC1C-4D23-9A9C-053288BF6760}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureFactory", "AzureFactory\AzureFactory.csproj", "{20374943-D0ED-405D-A406-7AFBF412948D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFactory", "AzureFactory\AzureFactory.csproj", "{20374943-D0ED-405D-A406-7AFBF412948D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PP2AzureConfig", "PP2AzureConfig\PP2AzureConfig.csproj", "{6E5CD24E-D281-490C-ABC6-A1C331CA7DAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PP2AzureConfig", "PP2AzureConfig\PP2AzureConfig.csproj", "{6E5CD24E-D281-490C-ABC6-A1C331CA7DAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,9 +7,11 @@
     <PackageReference Include="Microsoft.Azure.Management.ContainerInstance.Fluent" Version="1.38.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.38.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Container Library Helper\Container Library Helper.csproj" />
+    <ProjectReference Include="..\ContainerFactory\ContainerFactory.csproj" />
     <ProjectReference Include="..\PP2AzureConfig\PP2AzureConfig.csproj" />
   </ItemGroup>
   <ItemGroup>

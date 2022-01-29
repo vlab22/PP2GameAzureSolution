@@ -1,4 +1,5 @@
 using Container_Library_Helper;
+using ContainerFactory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PP2AzureConfig;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PP2GameAzureFcs
@@ -15,25 +17,25 @@ namespace PP2GameAzureFcs
     {
         [FunctionName("CreateGameContainer")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
-            bool auth = AuthorizationHelper.CheckUserAndPass((string)(data?.user), (string)(data?.pass));
+            bool auth = AuthorizationHelper.CheckUserAndPass((string)data?.user, (string)data?.pass);
 
-            if (!auth || data?.name == null)
+            if (!auth)
             {
-                return new ForbidResult();
+                return AuthorizationHelper.ForbidIncorrectPostPassword();
             }
 
-            var test = ContainerGroupParameterClassCreator.Run();
+            var azure = AzureFactory.AzureCreator.GetAzureContext();
 
-            var cntGrpsDetail = await AzureContainerGroupHelper.GetContainerGroupsDetailsList(PP2Config.ResourceGroupName);
+            var cntGr = await ContainerFactory.GameUnityServer.CreateLinuxAsync("pp2gameinst1", PP2Config.ResourceGroupName, "pp2gameinst1", "westeurope", 55551);
 
-            return new JsonResult(cntGrpsDetail);
+            return new JsonResult(new ContainerGroupDetail(cntGr));
         }
     }
 }

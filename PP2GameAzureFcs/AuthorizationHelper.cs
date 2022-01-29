@@ -13,15 +13,15 @@ namespace PP2GameAzureFcs
 {
     internal class AuthorizationHelper
     {
-        const string user = "vlab22pp2";
-        const string password = "password";
+        const string user = "pp2game";
+        const string password = "KDcx6kB2v77B5bm5AwY7XakYSsSB7Q4R";
 
         public static async Task<bool> CheckUserPassAsync(HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
-            var result = data?.user == user && data?.pass == password;
+            var result = data?.user_auth == user && data?.user_pass_auth == password;
 
             return result;
         }

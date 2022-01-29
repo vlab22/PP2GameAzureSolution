@@ -22,7 +22,7 @@ namespace PP2GameAzureFcs
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
-            bool auth = AuthorizationHelper.CheckUserAndPass((string)(data?.user), (string)(data?.pass));
+            bool auth = AuthorizationHelper.CheckUserAndPass((string)(data?.user_auth), (string)(data?.user_pass_auth));
 
             if (!auth)
             {

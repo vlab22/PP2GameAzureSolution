@@ -22,7 +22,7 @@ namespace PP2GameAzureFcs
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
-            bool auth = AuthorizationHelper.CheckUserAndPass((string)(data?.user), (string)(data?.pass));
+            bool auth = AuthorizationHelper.CheckUserAndPass((string)(data?.user_auth), (string)(data?.user_pass_auth));
 
             if (!auth)
             {
@@ -37,7 +37,7 @@ namespace PP2GameAzureFcs
         private static async Task<int> UpdateGameServerPlayerCount(dynamic data)
         {
             if (int.TryParse((string)data?.player_count, out int playerCount) == false
-                || int.TryParse((string)data?.id, out int serverId) == false)
+                || int.TryParse((string)data?.server_id, out int serverId) == false)
             {
                 return -1;
             }

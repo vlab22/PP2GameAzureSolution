@@ -29,23 +29,23 @@ namespace PP2GameAzureFcs
                 return AuthorizationHelper.ForbidIncorrectPostPassword();
             }
 
-            int id = await InsertGameServerPlayerCount(data);
+            //int id = await InsertGameServerPlayerCount(data);
 
-            return new OkObjectResult(id);
+            return new OkObjectResult(0);
         }
 
-        private static async Task<int> InsertGameServerPlayerCount(dynamic data)
-        {
-            if (int.TryParse((string)data?.player_count, out int playerCount) == false)
-            {
-                return -1;
-            }
+        //private static async Task<int> InsertGameServerPlayerCount(dynamic data)
+        //{
+        //    if (int.TryParse((string)data?.player_count, out int playerCount) == false)
+        //    {
+        //        return -1;
+        //    }
 
-            var saver = new SqlGameServerDataFacade();
+        //    var saver = new SqlGameServerDataFacade();
             
-            int id = await saver.InsertAsync(playerCount);
+        //    int id = await saver.InsertAsync(playerCount);
 
-            return id;
-        }
+        //    return id;
+        //}
     }
 }

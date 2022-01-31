@@ -22,6 +22,8 @@ namespace ContainerFactory
                     .WithMemorySizeInGB(1.5)
                     .WithCpuCoreCount(1)
                     .WithEnvironmentVariables(new Dictionary<string, string>{
+                        { "PP2_AZ_FC_URL", "https://pp2gameazurefcs.azurewebsites.net"},
+                        { "PP2_AUTH_CODE", "nO3yJr14m3cpsrimxAd0tQk57/Gu2BDuZMn8GEXXarB4lEEaB0aMQA=="},
                         { "PP2_SERVER_ID", serverId.ToString() },
                         { "PP2_SERVER_PORT", port.ToString() },
                         { "PP2_MAX_PLAYERS", maxPlayers.ToString() },

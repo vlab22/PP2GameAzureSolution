@@ -15,5 +15,7 @@ namespace PP2GameAzureFcs
         public abstract Task<int> UpdateStatusAsync(int id, string newStatus);
         public abstract Task<int> UpdateAsync(int id, string newName, string newDns, int newPort, string newRegion, int newMaxPlayers, int newPlayerCount, string newStatus);
         public abstract Task<int> InsertForIdAsync();
+
+        public abstract Task<int> DeleteAsync(int pServerId);
     }
 }

@@ -10,6 +10,31 @@ namespace PP2GameAzureFcs.GameServerDataFacade
 {
     internal class SqlGameServerDataFacade : GameServerDataBaseFacade
     {
+        public override async Task<int> DeleteAsync(int pServerId)
+        {
+            var str = Environment.GetEnvironmentVariable("sqldb_connection");
+            using (var conn = new SqlConnection(str))
+            {
+                conn.Open();
+                var sql = $"DELETE FROM [dbo].[GameServer] WHERE [Id] = {pServerId}";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    try
+                    {
+                        int rows = await cmd.ExecuteNonQueryAsync();
+                        return rows;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        return -1;
+                    }
+                }
+            }
+        }
+
         public override async Task<List<GameServerDetailData>> GetGameServerListAsync()
         {
             var resultList = new List<GameServerDetailData>();

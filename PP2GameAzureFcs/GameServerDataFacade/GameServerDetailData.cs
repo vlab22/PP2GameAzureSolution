@@ -10,5 +10,10 @@
         public int maxPlayers;
         public int playersCount;
         public string status;
+
+        public bool IsInitializing()
+        {
+            return status.ToLower() == "initializing";
+        }
     }
 }

@@ -25,6 +25,11 @@ namespace PP2GameAzureFcs
             });
         }
 
+        /// <summary>
+        /// Get the containers and compare with the table, removing rows without containers ans faulty containers
+        /// </summary>
+        /// <param name="pLog"></param>
+        /// <returns></returns>
         private async Task ProcessGameServerTable(ILogger pLog)
         {
             var facade = new SqlGameServerDataFacade();
@@ -32,13 +37,21 @@ namespace PP2GameAzureFcs
             var serversData = await facade.GetGameServerListAsync();
 
             var azure = AzureFactory.AzureCreator.GetAzureContext();
-            var cntsMap = azure.ContainerGroups.List().ToDictionary(k => int.Parse(k.Containers["unitygame"].EnvironmentVariables.FirstOrDefault(env => env.Name == "PP2_SERVER_ID").Value), v => v);
+            var cntsMap = azure.ContainerGroups.ListByResourceGroup(PP2Config.ResourceGroupName).ToDictionary(k => int.Parse(k.Containers["unitygame"].EnvironmentVariables.FirstOrDefault(env => env.Name == "PP2_SERVER_ID").Value), v => v);
 
             var excp = cntsMap.Keys.Except(serversData.Select(sd => sd.id));
 
+            foreach (var srvData in serversData)
+            {
+                if (!srvData.IsInitializing() && cntsMap.TryGetValue(srvData.id, out var cnt) == false)
+                {
+                    await facade.DeleteAsync(srvData.id);
+                }
+            }
+
             foreach (var id in excp)
             {
-                pLog.LogWarning($"Deleting unrelated container in table, name: pp2gameserver{id}");
+                pLog.LogWarning($"Deleting orphan container (no data in the table), name: pp2gameserver{id}");
                 await azure.ContainerGroups.DeleteByResourceGroupAsync(PP2Config.ResourceGroupName, $"pp2gameserver{id}");
             }
 

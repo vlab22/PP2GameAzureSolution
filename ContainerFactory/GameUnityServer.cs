@@ -7,7 +7,8 @@ namespace ContainerFactory
 {
     public class GameUnityServer
     {
-        private static IWithCreate CreateLinuxDefinition(string name, string resourceGroup, string dns, string region, int port, IAzure azure)
+        private static IWithCreate CreateLinuxDefinition(int serverId, string name, string resourceGroup, string dns, int port
+            , string region, int maxPlayers, IAzure azure)
         {
             var iWith = azure.ContainerGroups.Define(name)
                 .WithRegion(region)
@@ -20,7 +21,12 @@ namespace ContainerFactory
                     .WithExternalTcpPort(port)
                     .WithMemorySizeInGB(1.5)
                     .WithCpuCoreCount(1)
-                    .WithEnvironmentVariable("PLAYERS_COUNT", "0")
+                    .WithEnvironmentVariables(new Dictionary<string, string>{
+                        { "PP2_SERVER_ID", serverId.ToString() },
+                        { "PP2_SERVER_PORT", port.ToString() },
+                        { "PP2_MAX_PLAYERS", maxPlayers.ToString() },
+                        { "PLAYERS_COUNT", "0" }
+                     })
                     .Attach()
                 .WithRestartPolicy(Microsoft.Azure.Management.ContainerInstance.Fluent.Models.ContainerGroupRestartPolicy.OnFailure)
                 .WithDnsPrefix(dns);
@@ -28,20 +34,31 @@ namespace ContainerFactory
             return iWith;
         }
 
-        public static async Task<IContainerGroup> CreateLinuxAsync(string name, string resourceGroup, string dns, string region, int port)
+        public static async Task<IContainerGroup> CreateLinuxAsync(int serverId, string name, string resourceGroup, string dns, int port
+            , string region, int maxPlayers)
         {
             var azure = AzureFactory.AzureCreator.GetAzureContext();
-            var iWith = CreateLinuxDefinition(name, resourceGroup, dns, region, port, azure);
-            var cnt = await iWith.CreateAsync();
+            var iWith = CreateLinuxDefinition(serverId, name, resourceGroup, dns, port, region, maxPlayers, azure);
+
+            IContainerGroup cnt = null;
+
+            try
+            {
+                cnt = await iWith.CreateAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
 
             return cnt;
         }
 
-        public static IContainerGroup CreateLinux(string name, string resourceGroup, string dns, string region, int port)
+        public static IContainerGroup CreateLinux(int serverId, string name, string resourceGroup, string dns, int port, string region, int maxPlayers)
         {
             var azure = AzureFactory.AzureCreator.GetAzureContext();
-            var iWith = CreateLinuxDefinition(name, resourceGroup, dns, region, port, azure);
-            var cnt =  iWith.Create();
+            var iWith = CreateLinuxDefinition(serverId, name, resourceGroup, dns, port, region, maxPlayers, azure);
+            var cnt = iWith.Create();
 
             return cnt;
         }

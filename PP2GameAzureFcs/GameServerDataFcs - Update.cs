@@ -36,7 +36,7 @@ namespace PP2GameAzureFcs
 
         private static async Task<int> UpdateGameServerPlayerCount(dynamic data)
         {
-            if (int.TryParse((string)data?.player_count, out int playerCount) == false
+            if (int.TryParse((string)data?.players_count, out int playerCount) == false
                 || int.TryParse((string)data?.server_id, out int serverId) == false)
             {
                 return -1;
@@ -44,7 +44,44 @@ namespace PP2GameAzureFcs
 
             var saver = new SqlGameServerDataFacade();
 
-            int id = await saver.UpdateAsync(serverId, playerCount);
+            int id = await saver.UpdatePlayeCountAsync(serverId, playerCount);
+
+            return id;
+        }
+
+        [FunctionName("UpdateGameServerStatusDataAzFc")]
+        public static async Task<IActionResult> Run3(
+    [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+    ILogger log)
+        {
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic data = JsonConvert.DeserializeObject(requestBody);
+
+            bool auth = AuthorizationHelper.CheckUserAndPass((string)(data?.user_auth), (string)(data?.user_pass_auth));
+
+            if (!auth)
+            {
+                return AuthorizationHelper.ForbidIncorrectPostPassword();
+            }
+
+            int id = await UpdateGameServerStatus(data);
+
+            return new OkObjectResult(id);
+        }
+
+        private static async Task<int> UpdateGameServerStatus(dynamic data)
+        {
+            var serverStatus = (string)data?.status;
+            if (string.IsNullOrWhiteSpace(serverStatus) == true
+                || int.TryParse((string)data?.server_id, out int serverId) == false)
+            {
+                return -1;
+            }
+
+            var saver = new SqlGameServerDataFacade();
+
+            int id = await saver.UpdateStatusAsync(serverId, serverStatus);
 
             return id;
         }

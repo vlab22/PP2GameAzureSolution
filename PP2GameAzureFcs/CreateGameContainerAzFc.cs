@@ -33,7 +33,7 @@ namespace PP2GameAzureFcs
 
             var azure = AzureFactory.AzureCreator.GetAzureContext();
 
-            var cntGr = await ContainerFactory.GameUnityServer.CreateLinuxAsync("pp2gameinst1", PP2Config.ResourceGroupName, "pp2gameinst1", "westeurope", 55551);
+            var cntGr = await ContainerFactory.GameUnityServer.CreateLinuxAsync(1, "pp2gameinst1", PP2Config.ResourceGroupName, "pp2gameinst1", 55551, "westeurope", 3);
 
             return new JsonResult(new ContainerGroupDetail(cntGr));
         }

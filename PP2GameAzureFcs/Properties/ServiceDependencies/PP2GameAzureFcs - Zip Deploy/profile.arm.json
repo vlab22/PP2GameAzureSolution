@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "PP2GameAzureFcs20220127010428",
+      "defaultValue": "PP2GameAzureFcs",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

@@ -18,6 +18,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFactory", "AzureFactor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PP2AzureConfig", "PP2AzureConfig\PP2AzureConfig.csproj", "{6E5CD24E-D281-490C-ABC6-A1C331CA7DAD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sqls", "Sqls", "{48BED94E-4731-4239-BF02-787A7C1BB4ED}"
+	ProjectSection(SolutionItems) = preProject
+		Sqls\dbo.GameServer-Table.sql = Sqls\dbo.GameServer-Table.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -14,6 +14,8 @@ namespace PP2GameAzureFcs
 {
     public class JanitorCleanFaultyGameServerTableItemsFcs
     {
+        const int InitializingStatePermitedInterval = 5 * 60;
+
         [FunctionName("JanitorCleanFaultyGameServerTableItemsAzFc")]
         public void Run([TimerTrigger("*/30 * * * * *")] TimerInfo myTimer, ILogger log)
         {
@@ -26,7 +28,8 @@ namespace PP2GameAzureFcs
         }
 
         /// <summary>
-        /// Get the containers and compare with the table, removing rows without containers ans faulty containers
+        /// Get the containers and compare with the table, removing rows without containers and faulty containers
+        /// Remove containers in Initializing state more than 2 minutes
         /// </summary>
         /// <param name="pLog"></param>
         /// <returns></returns>
@@ -37,6 +40,7 @@ namespace PP2GameAzureFcs
             var serversData = await facade.GetGameServerListAsync();
 
             var azure = AzureFactory.AzureCreator.GetAzureContext();
+            var cntsGroups = azure.ContainerGroups.ListByResourceGroup(PP2Config.ResourceGroupName);
             var cntsMap = azure.ContainerGroups.ListByResourceGroup(PP2Config.ResourceGroupName).ToDictionary(k => int.Parse(k.Containers["unitygame"].EnvironmentVariables.FirstOrDefault(env => env.Name == "PP2_SERVER_ID").Value), v => v);
 
             var excp = cntsMap.Keys.Except(serversData.Select(sd => sd.id));
@@ -45,7 +49,19 @@ namespace PP2GameAzureFcs
             {
                 if (!srvData.IsInitializing() && cntsMap.TryGetValue(srvData.id, out var cnt) == false)
                 {
+                    pLog.LogWarning($"Deleting orphan Table Row (no container for row), name: pp2gameserver{srvData.id}");
                     await facade.DeleteAsync(srvData.id);
+                }
+
+                if (srvData.IsInitializing())
+                {
+                    var created_at = srvData.created_at;
+                    int seconds = (DateTime.Now.ToUniversalTime() - created_at.ToUniversalTime()).Seconds;
+                    if (seconds > InitializingStatePermitedInterval)
+                    {
+                        pLog.LogWarning($"Deleting orphan Table Row (\"Initializing state\" > 40 no container for row), name: pp2gameserver{srvData.id}");
+                        await facade.DeleteAsync(srvData.id);
+                    }
                 }
             }
 

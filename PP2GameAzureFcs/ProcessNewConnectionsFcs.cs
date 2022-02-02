@@ -25,6 +25,8 @@ namespace PP2GameAzureFcs
         {
             _log = log;
 
+            log.LogInformation($"Requested by {req.HttpContext?.Connection?.RemoteIpAddress}");
+
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
@@ -36,12 +38,12 @@ namespace PP2GameAzureFcs
             }
 
             //Get Servers and Process
-            var gameServers = await GetGameServersDataAndCheckScaleUp();
+            var gameServers = await GetGameServersDataAndCheckScaleUp(log);
 
             return new JsonResult(gameServers);
         }
 
-        private static async Task<List<GameServerDetailData>> GetGameServersDataAndCheckScaleUp()
+        private static async Task<List<GameServerDetailData>> GetGameServersDataAndCheckScaleUp(ILogger pLog)
         {
             var gameServers = await GetGameServersData();
 
@@ -56,13 +58,13 @@ namespace PP2GameAzureFcs
             else
             {
                 //Insert Data in GameServer Table
-                await CreateNewGameServerContainer();
+                await CreateNewGameServerContainer(pLog);
             }
 
             return gameServers;
         }
 
-        private static async Task CreateNewGameServerContainer()
+        private static async Task CreateNewGameServerContainer(ILogger pLog)
         {
             var facade = new SqlGameServerDataFacade();
             int serverId = await facade.InsertForIdAsync();
@@ -73,35 +75,39 @@ namespace PP2GameAzureFcs
             {
                 id = serverId,
                 name = $"pp2gameserver{serverId}",
-                dns = $"pp2gameserver{serverId}",
-                port = 55551,
+                dns =  $"pp2gameserver{serverId}",
                 region = region,
-                maxPlayers = 3,
+                maxPlayers = 2,
                 playersCount = 0,
                 status = "Initializing"
             };
 
-            int update = await facade.UpdateAsync(
+            int update = await facade.UpdateAndSetLastPortAsync(
                 serverDetails.id
                 , serverDetails.name
                 , serverDetails.dns
-                , serverDetails.port
                 , serverDetails.region
                 , serverDetails.maxPlayers
                 , serverDetails.playersCount
                 , serverDetails.status);
 
+            var serverDetailsToCreate = await facade.GetGameServerByIdAsync(serverId);
 
             //Expand async, not wait
-            CreateContainerAndValidate(serverDetails);
+            CreateContainerAndValidate(serverDetailsToCreate, pLog);
 
         }
 
-        static async void CreateContainerAndValidate(GameServerDetailData serverDetails)
+        static async void CreateContainerAndValidate(GameServerDetailData serverDetails, ILogger pLog)
         {
+
+            pLog.LogWarning($"Trying creating container {serverDetails.name} | {serverDetails.port}");
+
+            IContainerGroup cnt = null;
+
             try
             {
-                var cnt = await ContainerFactory.GameUnityServer.CreateLinuxAsync(
+                cnt = await ContainerFactory.GameUnityServer.CreateLinuxAsync(
                         serverDetails.id,
                         serverDetails.name,
                         PP2AzureConfig.PP2Config.ResourceGroupName,
@@ -113,7 +119,12 @@ namespace PP2GameAzureFcs
             }
             catch (Exception ex)
             {
-                _log.LogError(ex.Message + " | " + ex.StackTrace);
+                pLog.LogError(ex.Message + " | " + ex.StackTrace);
+            }
+
+            if (cnt == null)
+            {
+                pLog.LogWarning($"Container cnt result NULL for {serverDetails.name} | {serverDetails.port}");
             }
         }
 

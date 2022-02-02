@@ -1,4 +1,6 @@
-﻿namespace PP2GameAzureFcs
+﻿using System;
+
+namespace PP2GameAzureFcs
 {
     public class GameServerDetailData
     {
@@ -10,6 +12,7 @@
         public int maxPlayers;
         public int playersCount;
         public string status;
+        public DateTime created_at;
 
         public bool IsInitializing()
         {
